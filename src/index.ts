@@ -2,12 +2,6 @@ import { parse as parseHtml } from "node-html-parser";
 import { Node, HtmlNode, TextNode } from "./types/Node";
 import { parseAttrs, parseText } from "./parsers";
 
-// y-if="foobar"
-// y-else
-// y-for="foo in bar"
-// {{ foobar }}
-// <y-custom-component>
-
 const isHtmlNode = (obj: any): obj is HtmlNode => obj.nodeType === 1;
 const isTextNode = (obj: any): obj is TextNode => obj.nodeType === 3;
 
