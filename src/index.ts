@@ -1,58 +1,15 @@
 import { parse as parseHtml } from "node-html-parser";
-import { kebabToCamel } from "./helpers";
+import { Node, HtmlNode, TextNode } from "./types/Node";
+import { parseAttrs, parseText } from "./parsers";
 
 // y-if="foobar"
 // y-else
 // y-for="foo in bar"
+// {{ foobar }}
 // <y-custom-component>
-
-interface Node {
-  childNodes: Node[];
-}
-interface HtmlNode extends Node {
-  attributes: Record<string, string>;
-  removeAttribute(key: string): void;
-  setAttribute(key: string, value: string): void;
-}
-interface TextNode extends Node {
-  rawText: String;
-}
 
 const isHtmlNode = (obj: any): obj is HtmlNode => obj.nodeType === 1;
 const isTextNode = (obj: any): obj is TextNode => obj.nodeType === 3;
-
-const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
-  const attrs = node.attributes;
-
-  Object.keys(attrs).forEach((attr) => {
-    const isBindAttr = /^y-bind:.+$/.test(attr);
-
-    if (!isBindAttr) return;
-
-    const varName = attr.split(":")[1];
-    const varNameCamel = kebabToCamel(varName);
-    const varVal = ctx[varNameCamel];
-
-    node.removeAttribute(attr);
-    node.setAttribute(varName, `${varVal}`);
-  });
-};
-
-const parseText = (node: TextNode, ctx: Record<string, any>) => {
-  let { rawText } = node;
-  const textToParse = rawText.match(/{{.+?}}/g);
-
-  if (textToParse === null) return;
-
-  textToParse.forEach((text) => {
-    const varName = text.replace(/[{}\s]*/g, "");
-    const varVal = ctx[varName];
-
-    rawText = rawText.replace(text, `${varVal}`);
-  });
-
-  node.rawText = rawText;
-};
 
 const parse = (nodes: Node[], ctx: object) => {
   nodes.forEach((node) => {

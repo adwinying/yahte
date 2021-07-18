@@ -1,4 +1,8 @@
+const isKebabCase = (str: string) => /^[a-z]+-*[a-z]+$/g.test(str);
+
 export const kebabToCamel = (kebab: string) => {
+  if (!isKebabCase(kebab)) throw new Error(`${kebab} is not kebab-case`);
+
   return kebab
     .split("-")
     .map((word, i) => {
@@ -9,4 +13,9 @@ export const kebabToCamel = (kebab: string) => {
     .join("");
 };
 
-export default null;
+export const getCtxVal = (ctx: Record<string, any>, key: string) => {
+  if (!Object.prototype.hasOwnProperty.call(ctx, key))
+    throw new Error(`${key} is not defined in context`);
+
+  return `${ctx[key]}`;
+};
