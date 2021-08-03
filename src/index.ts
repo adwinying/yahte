@@ -14,7 +14,7 @@ const parse = (nodes: Node[], ctx: object) => {
   });
 };
 
-const compile = (input: string, ctx: object = {}) => {
+export const compile = (input: string, ctx: object = {}) => {
   const obj = parseHtml(input);
 
   parse(obj.childNodes, ctx);
@@ -22,9 +22,4 @@ const compile = (input: string, ctx: object = {}) => {
   return obj.toString();
 };
 
-console.log(
-  compile(
-    `<div class="smth" y-bind:test="test" y-bind:foo-bar="fooBar">hello<span>{{ foo }} bar {{ foo }}</span></div>`,
-    { foo: "wee", test: "woo", fooBar: "weewoo" }
-  )
-);
+export default null

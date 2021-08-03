@@ -1,20 +1,19 @@
 import { HtmlNode, TextNode } from "./types/Node";
-import { kebabToCamel } from "./helpers";
+import { evaluate } from "./evaluators";
 
 export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
   const attrs = node.attributes;
 
-  Object.keys(attrs).forEach((attr) => {
+  Object.entries(attrs).forEach(([attr, expression]) => {
     const isBindAttr = /^y-bind:.+$/.test(attr);
 
     if (!isBindAttr) return;
 
-    const varName = attr.split(":")[1];
-    const varNameCamel = kebabToCamel(varName);
-    const varVal = ctx[varNameCamel];
+    const attrName = attr.split(":")[1];
+    const result = evaluate(expression, ctx);
 
     node.removeAttribute(attr);
-    node.setAttribute(varName, `${varVal}`);
+    node.setAttribute(attrName, `${result}`);
   });
 };
 
@@ -25,10 +24,10 @@ export const parseText = (node: TextNode, ctx: Record<string, any>) => {
   if (textToParse === null) return;
 
   textToParse.forEach((text) => {
-    const varName = text.replace(/[{}\s]*/g, "");
-    const varVal = ctx[varName];
+    const expression = text.replace(/[{}\s]*/g, "");
+    const result = evaluate(expression, ctx);
 
-    rawText = rawText.replace(text, `${varVal}`);
+    rawText = rawText.replace(text, `${result}`);
   });
 
   node.rawText = rawText;
