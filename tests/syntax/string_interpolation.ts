@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import { strict as assert } from "assert";
 import { compile } from "../../src/index";
 
 describe("string interpolation", () => {
@@ -9,7 +9,7 @@ describe("string interpolation", () => {
     const expected = "<div>bar</div>";
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 
   it("should parse continuous handlebars", () => {
@@ -19,7 +19,7 @@ describe("string interpolation", () => {
     const expected = "<div>123 456</div>";
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 
   it("should parse continuous handlebars with text in between", () => {
@@ -29,7 +29,7 @@ describe("string interpolation", () => {
     const expected = "<div>123 bar 123</div>";
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 
   it("should parse expression", () => {
@@ -39,6 +39,6 @@ describe("string interpolation", () => {
     const expected = "<div>1,2,3</div>";
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 });

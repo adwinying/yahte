@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import { strict as assert } from "assert";
 import { compile } from "../../src/index";
 
 describe("attribute binding", () => {
@@ -9,7 +9,7 @@ describe("attribute binding", () => {
     const expected = '<div foo="bar">foobar</div>';
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 
   it("should bind var to kebab-cased attr", () => {
@@ -19,7 +19,7 @@ describe("attribute binding", () => {
     const expected = '<div foo-bar="baz">foobar</div>';
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 
   it("should bind expression to attr", () => {
@@ -29,6 +29,6 @@ describe("attribute binding", () => {
     const expected = '<div foo="1,2,3">foobar</div>';
     const result = compile(html, obj);
 
-    assert.deepStrictEqual(result, expected);
+    assert.equal(result, expected);
   });
 });
