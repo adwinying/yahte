@@ -22,4 +22,4 @@ export const compile = (input: string, ctx: object = {}) => {
   return obj.toString();
 };
 
-export default null
+export default null;

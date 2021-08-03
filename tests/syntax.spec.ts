@@ -43,7 +43,7 @@ describe("string interpolation", () => {
   });
 });
 
-describe("attr binding", () => {
+describe("attribute binding", () => {
   it("should bind var to attr", () => {
     const html = '<div y-bind:foo="foo">foobar</div>';
     const obj = { foo: "bar" };
