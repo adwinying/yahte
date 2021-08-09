@@ -1,6 +1,20 @@
 import { HtmlNode, TextNode } from "./types/Node";
 import { evaluate } from "./evaluators";
 
+export const parseConds = (node: HtmlNode, ctx: Record<string, any>) => {
+  const condKey = "y-if";
+  const attrs = node.attributes;
+
+  const expression = attrs[condKey];
+
+  if (expression === undefined) return;
+
+  const result = evaluate(expression, ctx);
+
+  if (!result) node.remove();
+  else node.removeAttribute(condKey);
+};
+
 export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
   const attrs = node.attributes;
 
