@@ -1,18 +1,50 @@
 import { HtmlNode, TextNode } from "./types/Node";
 import { evaluate } from "./evaluators";
 
-export const parseConds = (node: HtmlNode, ctx: Record<string, any>) => {
-  const condKey = "y-if";
+type CondKey = "y-if" | "y-else-if" | "y-else";
+
+export const parseConds = (
+  node: HtmlNode,
+  ctx: Record<string, any>,
+  condKey: CondKey = "y-if",
+  matched: boolean = false
+) => {
   const attrs = node.attributes;
 
   const expression = attrs[condKey];
 
   if (expression === undefined) return;
 
+  if (matched) {
+    if (node.nextElementSibling !== null) {
+      parseConds(node.nextElementSibling, ctx, "y-else-if", true);
+      parseConds(node.nextElementSibling, ctx, "y-else", true);
+    }
+    node.remove();
+    return;
+  }
+
+  if (condKey === "y-else") {
+    node.removeAttribute(condKey);
+    return;
+  }
+
   const result = evaluate(expression, ctx);
 
-  if (!result) node.remove();
-  else node.removeAttribute(condKey);
+  if (!result) {
+    if (node.nextElementSibling !== null) {
+      parseConds(node.nextElementSibling, ctx, "y-else-if", false);
+      parseConds(node.nextElementSibling, ctx, "y-else", false);
+    }
+    node.remove();
+    return;
+  }
+
+  node.removeAttribute(condKey);
+  if (node.nextElementSibling !== null) {
+    parseConds(node.nextElementSibling, ctx, "y-else-if", true);
+    parseConds(node.nextElementSibling, ctx, "y-else", true);
+  }
 };
 
 export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {

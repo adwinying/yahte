@@ -41,4 +41,24 @@ describe("conditionals", () => {
 
     assert.deepStrictEqual(result, expected);
   });
+
+  it("should render else-if block if else-if expression truthy", () => {
+    const html = `<div y-if="false">hi</div><div y-else-if="true">hello</div><div y-else>bye</div>`;
+    const obj = {};
+
+    const expected = "<div>hello</div>";
+    const result = compile(html, obj);
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("should render else block if expression falsy", () => {
+    const html = `<div y-if="false">hi</div><div y-else>bye</div>`;
+    const obj = {};
+
+    const expected = "<div>bye</div>";
+    const result = compile(html, obj);
+
+    assert.deepStrictEqual(result, expected);
+  });
 });
