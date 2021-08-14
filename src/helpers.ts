@@ -1,21 +1,9 @@
-const isKebabCase = (str: string) => /^[a-z]+-*[a-z]+$/g.test(str);
+import { camelCase, upperFirst } from "lodash";
 
-export const kebabToCamel = (kebab: string) => {
-  if (!isKebabCase(kebab)) throw new Error(`${kebab} is not kebab-case`);
-
-  return kebab
-    .split("-")
-    .map((word, i) => {
-      if (i === 0) return word.toLowerCase();
-
-      return word[0].toUpperCase() + word.slice(1).toLowerCase();
-    })
-    .join("");
+export const camelize = (str: string) => {
+  return camelCase(str);
 };
 
-export const getCtxVal = (ctx: Record<string, any>, key: string) => {
-  if (!Object.prototype.hasOwnProperty.call(ctx, key))
-    throw new Error(`${key} is not defined in context`);
-
-  return `${ctx[key]}`;
+export const pascalize = (str: string) => {
+  return upperFirst(camelCase(str));
 };
