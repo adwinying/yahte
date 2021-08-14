@@ -9,7 +9,6 @@ export const evaluate = (expression: string, ctx: Record<string, any>) => {
   try {
     result = func();
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.warn(`[yahte] Expression error: ${expression}\n${e.message}`);
 
     throw e;

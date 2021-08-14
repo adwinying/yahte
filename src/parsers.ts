@@ -1,5 +1,7 @@
 import { HtmlNode, TextNode } from "./types/Node";
 import { evaluate } from "./evaluators";
+// eslint-disable-next-line import/no-cycle
+import { compile } from "./index";
 
 type CondKey = "y-if" | "y-else-if" | "y-else";
 
@@ -45,6 +47,35 @@ export const parseConds = (
     parseConds(node.nextElementSibling, ctx, "y-else-if", true);
     parseConds(node.nextElementSibling, ctx, "y-else", true);
   }
+};
+
+export const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
+  const attrs = node.attributes;
+
+  const expression = attrs["y-for"];
+
+  if (expression === undefined) return false;
+
+  const [iterationExpr, arrExpr] = expression.split("in");
+  const [elExpr, idxExpr] = iterationExpr.replace(/\s|\(|\)/g, "").split(",");
+
+  const arrVal = evaluate(arrExpr, ctx);
+
+  if (!Array.isArray(arrVal)) {
+    console.warn(`[yahte] Expression error: ${arrExpr} is not an array`);
+    return false;
+  }
+
+  node.removeAttribute("y-for");
+  const nodeStr = node.toString();
+
+  const parsedNodes = arrVal.map((arrEl, idx) => {
+    return compile(nodeStr, { ...ctx, [elExpr]: arrEl, [idxExpr]: idx });
+  });
+
+  node.replaceWith(...parsedNodes);
+
+  return true;
 };
 
 export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {

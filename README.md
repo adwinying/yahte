@@ -66,7 +66,7 @@ const data  = { bar: 'someValue' }
 // renders <div foo="someValue">Hellow world</div>
 ```
 
-### [TODO] Conditionals
+### Conditionals
 
 ```js
 // before
@@ -85,7 +85,7 @@ const data  = { foo: false }
 ```
 
 
-### [TODO] Loops
+### Loops
 
 ```js
 // before
