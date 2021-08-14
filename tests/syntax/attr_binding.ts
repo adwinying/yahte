@@ -7,7 +7,7 @@ describe("attribute binding", () => {
     const obj = { foo: "bar" };
 
     const expected = '<div foo="bar">foobar</div>';
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });
@@ -17,7 +17,7 @@ describe("attribute binding", () => {
     const obj = { foo: "baz" };
 
     const expected = '<div foo-bar="baz">foobar</div>';
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });
@@ -27,7 +27,7 @@ describe("attribute binding", () => {
     const obj = { foo: [1, 2, 3] };
 
     const expected = '<div foo="1,2,3">foobar</div>';
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });

@@ -7,7 +7,7 @@ describe("conditionals", () => {
     const obj = { foo: "bar" };
 
     const expected = "<div>foobar</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });
@@ -17,7 +17,7 @@ describe("conditionals", () => {
     const obj = { foo: null };
 
     const expected = "";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });
@@ -27,7 +27,7 @@ describe("conditionals", () => {
     const obj = {};
 
     const expected = "<div>foobar</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });
@@ -37,7 +37,7 @@ describe("conditionals", () => {
     const obj = {};
 
     const expected = "";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });
@@ -47,7 +47,7 @@ describe("conditionals", () => {
     const obj = {};
 
     const expected = "<div>hello</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });
@@ -57,7 +57,7 @@ describe("conditionals", () => {
     const obj = {};
 
     const expected = "<div>bye</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.deepStrictEqual(result, expected);
   });

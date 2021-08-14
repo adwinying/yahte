@@ -7,7 +7,7 @@ describe("string interpolation", () => {
     const obj = { foo: "bar" };
 
     const expected = "<div>bar</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });
@@ -17,7 +17,7 @@ describe("string interpolation", () => {
     const obj = { foo: "123", bar: "456" };
 
     const expected = "<div>123 456</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });
@@ -27,7 +27,7 @@ describe("string interpolation", () => {
     const obj = { foo: "123" };
 
     const expected = "<div>123 bar 123</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });
@@ -37,7 +37,7 @@ describe("string interpolation", () => {
     const obj = { foo: [1, 2, 3] };
 
     const expected = "<div>1,2,3</div>";
-    const result = compile(html, obj);
+    const result = compile(html, { context: obj });
 
     assert.equal(result, expected);
   });

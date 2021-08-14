@@ -35,9 +35,9 @@ npm install -D yahte
 import { compile } from 'yahte'
 
 const input = `<div>Hello {{ name }}</div>`
-const data  = { name: 'world' }
+const context  = { name: 'world' }
 
-const output = compile(input, data)
+const output = compile(input, { context })
 
 // output: <div>Hello world</div>
 ```
@@ -51,7 +51,7 @@ Currently, the supported directives are as follows:
 ```js
 // before
 const input = `<div>Hello {{ name }}</div>`
-const data  = { name: 'world' }
+const context  = { name: 'world' }
 
 // renders <div>bar</div>
 ```
@@ -61,7 +61,7 @@ const data  = { name: 'world' }
 ```js
 // before
 const input = `<div y-bind:foo="bar">Hello world</div>`
-const data  = { bar: 'someValue' }
+const context  = { bar: 'someValue' }
 
 // renders <div foo="someValue">Hellow world</div>
 ```
@@ -71,7 +71,7 @@ const data  = { bar: 'someValue' }
 ```js
 // before
 const input = `<div y-if="foo">I'm foo!></div>`
-const data  = { foo: true }
+const context  = { foo: true }
 
 // renders <div>I'm foo!</div>
 ```
@@ -79,7 +79,7 @@ const data  = { foo: true }
 ```js
 // before
 const input = `<div y-if="foo">I'm foo!></div><div y-else>Not foo</div>`
-const data  = { foo: false }
+const context  = { foo: false }
 
 // renders <div>Not foo</div>
 ```
@@ -90,7 +90,7 @@ const data  = { foo: false }
 ```js
 // before
 const input = `<ul><li y-for="item in list">{{ item }}</li></ul>`
-const data  = { list: ['one', 'two', 'three'] }
+const context  = { list: ['one', 'two', 'three'] }
 
 // renders <ul><li>one</li><li>two</li><li>three</li>
 ```

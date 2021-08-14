@@ -1,11 +1,10 @@
-import { HtmlNode, TextNode } from "./types/Node";
+import { Node, HtmlNode, TextNode } from "./types/Node";
 import { evaluate } from "./evaluators";
-// eslint-disable-next-line import/no-cycle
-import { compile } from "./index";
+import { cloneNode, isHtmlNode, isTextNode } from "./helpers";
 
 type CondKey = "y-if" | "y-else-if" | "y-else";
 
-export const parseConds = (
+const parseConds = (
   node: HtmlNode,
   ctx: Record<string, any>,
   condKey: CondKey = "y-if",
@@ -49,7 +48,7 @@ export const parseConds = (
   }
 };
 
-export const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
+const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
   const attrs = node.attributes;
 
   const expression = attrs["y-for"];
@@ -67,10 +66,14 @@ export const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
   }
 
   node.removeAttribute("y-for");
-  const nodeStr = node.toString();
 
   const parsedNodes = arrVal.map((arrEl, idx) => {
-    return compile(nodeStr, { ...ctx, [elExpr]: arrEl, [idxExpr]: idx });
+    const clonedNode = cloneNode(node);
+
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    parse(clonedNode, { ...ctx, [elExpr]: arrEl, [idxExpr]: idx });
+
+    return clonedNode.toString();
   });
 
   node.replaceWith(...parsedNodes);
@@ -78,7 +81,7 @@ export const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
   return true;
 };
 
-export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
+const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
   const attrs = node.attributes;
 
   Object.entries(attrs).forEach(([attr, expression]) => {
@@ -94,7 +97,7 @@ export const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
   });
 };
 
-export const parseText = (node: TextNode, ctx: Record<string, any>) => {
+const parseText = (node: TextNode, ctx: Record<string, any>) => {
   let { rawText } = node;
   const textToParse = rawText.match(/{{.+?}}/g);
 
@@ -109,3 +112,18 @@ export const parseText = (node: TextNode, ctx: Record<string, any>) => {
 
   node.rawText = rawText;
 };
+
+export const parse = (nodes: Node[], ctx: object) => {
+  nodes.forEach((node) => {
+    if (isHtmlNode(node)) {
+      parseConds(node, ctx);
+      if (parseLoops(node, ctx)) return;
+      parseAttrs(node, ctx);
+    }
+    if (isTextNode(node)) parseText(node, ctx);
+
+    parse(node.childNodes, ctx);
+  });
+};
+
+export default null;
