@@ -1,7 +1,7 @@
 import { Node, HtmlNode, TextNode } from "./types/Node";
 import { cloneNode } from "./nodes";
 import { evaluate } from "./evaluators";
-import { isHtmlNode, isTextNode } from "./helpers";
+import { isHtmlNode, isTextNode, isObject } from "./helpers";
 
 type CondKey = "y-if" | "y-else-if" | "y-else";
 
@@ -84,6 +84,23 @@ const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
 
 const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
   const attrs = node.attributes;
+
+  const bindExpr = attrs["y-bind"];
+
+  if (bindExpr !== undefined) {
+    const bindings = evaluate(bindExpr, ctx);
+
+    node.removeAttribute("y-bind");
+
+    if (!isObject(bindings)) {
+      console.warn(`[yahte] Expression error: ${bindExpr} is not an object`);
+      return;
+    }
+
+    Object.entries(bindings).forEach(([attr, expression]) => {
+      node.setAttribute(attr, expression);
+    });
+  }
 
   Object.entries(attrs).forEach(([attr, expression]) => {
     const isBindAttr = /^y-bind:.+$/.test(attr);

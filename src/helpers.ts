@@ -11,3 +11,5 @@ export const camelize = (str: string) => {
 export const pascalize = (str: string) => {
   return upperFirst(camelCase(str));
 };
+
+export { isObject } from "lodash";

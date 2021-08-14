@@ -31,4 +31,14 @@ describe("attribute binding", () => {
 
     assert.equal(result, expected);
   });
+
+  it("should destructure bind when no attr name specified", () => {
+    const html = `<div y-bind="test">foobar</div>`;
+    const obj = { test: { foo: "123", bar: "456" } };
+
+    const expected = '<div foo="123" bar="456">foobar</div>';
+    const result = compile(html, { context: obj });
+
+    assert.equal(result, expected);
+  });
 });
