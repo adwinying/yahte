@@ -1,12 +1,12 @@
-import { processOptions, RawOptions } from "./options";
+import { setOptions, RawOptions, getOptions } from "./options";
 import { textToNode } from "./nodes";
 import { parse } from "./parsers";
 
 export const compile = (input: string, options: RawOptions = {}) => {
-  const opts = processOptions(options);
+  setOptions(options);
   const rootNode = textToNode(input);
 
-  parse(rootNode.childNodes, opts.context);
+  parse(rootNode.childNodes, getOptions().context);
 
   return rootNode.toString();
 };
