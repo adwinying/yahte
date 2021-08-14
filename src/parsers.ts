@@ -1,6 +1,7 @@
 import { Node, HtmlNode, TextNode } from "./types/Node";
+import { cloneNode } from "./nodes";
 import { evaluate } from "./evaluators";
-import { cloneNode, isHtmlNode, isTextNode } from "./helpers";
+import { isHtmlNode, isTextNode } from "./helpers";
 
 type CondKey = "y-if" | "y-else-if" | "y-else";
 

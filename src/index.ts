@@ -1,15 +1,14 @@
-import { parse as parseHtml } from "node-html-parser";
 import { processConfig, RawConfig } from "./config";
-// eslint-disable-next-line import/no-cycle
+import { textToNode } from "./nodes";
 import { parse } from "./parsers";
 
 export const compile = (input: string, config: RawConfig = {}) => {
   const processedConfig = processConfig(config);
-  const obj = parseHtml(input);
+  const rootNode = textToNode(input);
 
-  parse(obj.childNodes, processedConfig.context);
+  parse(rootNode.childNodes, processedConfig.context);
 
-  return obj.toString();
+  return rootNode.toString();
 };
 
 export default null;
