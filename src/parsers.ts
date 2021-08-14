@@ -64,10 +64,8 @@ const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
 
   const arrVal = evaluate(arrExpr, ctx);
 
-  if (!Array.isArray(arrVal)) {
-    console.warn(`[yahte] Expression error: ${arrExpr} is not an array`);
-    return false;
-  }
+  if (!Array.isArray(arrVal))
+    throw new Error(`[yahte] Expression error: ${arrExpr} is not an array`);
 
   node.removeAttribute("y-for");
 
@@ -95,10 +93,8 @@ const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
 
     node.removeAttribute("y-bind");
 
-    if (!isObject(bindings)) {
-      console.warn(`[yahte] Expression error: ${bindExpr} is not an object`);
-      return;
-    }
+    if (!isObject(bindings))
+      throw new Error(`[yahte] Expression error: ${bindExpr} is not an object`);
 
     Object.entries(bindings).forEach(([attr, expression]) => {
       node.setAttribute(attr, expression);
@@ -142,9 +138,7 @@ const parseSlots = (node: HtmlNode, ctx: Record<string, any>) => {
 
   const slotNode = ctx._slot;
 
-  if (slotNode === undefined) {
-    throw new Error(`[yahte] Slot is undefined`);
-  }
+  if (slotNode === undefined) throw new Error(`[yahte] Slot is undefined`);
 
   node.replaceWith(...slotNode);
 
@@ -165,7 +159,7 @@ const parseComponents = (node: HtmlNode, ctx: Record<string, any>) => {
     if (isHtmlNode(childNode)) childNode.setAttributes(attrs);
   });
 
-  const childrenNodes = node.childNodes
+  const childrenNodes = node.childNodes;
   parse(node.childNodes, ctx);
   const newCtx = { ...attrs, _slot: childrenNodes };
 
