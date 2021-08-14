@@ -1,5 +1,6 @@
 import { Node, HtmlNode, TextNode } from "./types/Node";
-import { cloneNode } from "./nodes";
+import { cloneNode, textToNode } from "./nodes";
+import { getComponentHtml } from "./components";
 import { evaluate } from "./evaluators";
 import { isHtmlNode, isTextNode, isObject } from "./helpers";
 
@@ -131,12 +132,33 @@ const parseText = (node: TextNode, ctx: Record<string, any>) => {
   node.rawText = rawText;
 };
 
+const parseComponents = (node: HtmlNode) => {
+  const tagName = node.tagName.toLowerCase();
+  const isComponent = /^y-.+$/.test(tagName);
+
+  if (!isComponent) return;
+
+  const componentHtml = getComponentHtml(tagName);
+  const componentNode = textToNode(componentHtml);
+  const ctx = node.attributes;
+
+  componentNode.childNodes.forEach((childNode) => {
+    if (isHtmlNode(childNode)) childNode.setAttributes(ctx);
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  parse(componentNode.childNodes, ctx);
+
+  node.replaceWith(componentNode);
+};
+
 export const parse = (nodes: Node[], ctx: object) => {
   nodes.forEach((node) => {
     if (isHtmlNode(node)) {
       parseConds(node, ctx);
       if (parseLoops(node, ctx)) return;
       parseAttrs(node, ctx);
+      parseComponents(node);
     }
     if (isTextNode(node)) parseText(node, ctx);
 

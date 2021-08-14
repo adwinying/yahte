@@ -3,4 +3,5 @@ describe("syntax parsing", () => {
   require("./attr_binding");
   require("./conditionals");
   require("./loops");
+  require("./components");
 });

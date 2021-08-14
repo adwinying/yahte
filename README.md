@@ -95,9 +95,17 @@ const context  = { list: ['one', 'two', 'three'] }
 // renders <ul><li>one</li><li>two</li><li>three</li>
 ```
 
-### [TODO] Components
+### Components
+
+```html
+<!-- ./components/CustomComponent.html -->
+<div>hello from custom component</div>
+```
 
 ```js
-// <y-custom-component>
+// before
+const input = `<y-custom-component></y-custom-component>`
+
+// renders <div>hello from custom component</div>
 ```
 

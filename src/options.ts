@@ -5,11 +5,13 @@ let opts: Options | null = null;
 export interface RawOptions {
   context?: Record<string, any>;
   componentsDir?: string;
+  componentsExt?: string;
 }
 
 export interface Options {
   context: Record<string, any>;
   componentsDir: string;
+  componentsExt: string;
 }
 
 const processOptions = (options: RawOptions = {}) => {
@@ -18,6 +20,8 @@ const processOptions = (options: RawOptions = {}) => {
 
     componentsDir:
       options.componentsDir || path.resolve(__dirname, "components"),
+
+    componentsExt: options.componentsExt || "html",
   };
 };
 
