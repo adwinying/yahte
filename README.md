@@ -99,13 +99,13 @@ const context  = { list: ['one', 'two', 'three'] }
 
 ```html
 <!-- ./components/CustomComponent.html -->
-<div>hello from custom component</div>
+<div>hello <y-slot></y-slot></div>
 ```
 
 ```js
 // before
-const input = `<y-custom-component></y-custom-component>`
+const input = `<y-custom-component>world</y-custom-component>`
 
-// renders <div>hello from custom component</div>
+// renders <div>hello world</div>
 ```
 

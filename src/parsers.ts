@@ -4,6 +4,8 @@ import { getComponentHtml } from "./components";
 import { evaluate } from "./evaluators";
 import { isHtmlNode, isTextNode, isObject } from "./helpers";
 
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 type CondKey = "y-if" | "y-else-if" | "y-else";
 
 const parseConds = (
@@ -132,7 +134,24 @@ const parseText = (node: TextNode, ctx: Record<string, any>) => {
   node.rawText = rawText;
 };
 
-const parseComponents = (node: HtmlNode) => {
+const parseSlots = (node: HtmlNode, ctx: Record<string, any>) => {
+  const tagName = node.tagName.toLowerCase();
+  const isSlot = /^y-slot$/.test(tagName);
+
+  if (!isSlot) return false;
+
+  const slotNode = ctx._slot;
+
+  if (slotNode === undefined) {
+    throw new Error(`[yahte] Slot is undefined`);
+  }
+
+  node.replaceWith(...slotNode);
+
+  return true;
+};
+
+const parseComponents = (node: HtmlNode, ctx: Record<string, any>) => {
   const tagName = node.tagName.toLowerCase();
   const isComponent = /^y-.+$/.test(tagName);
 
@@ -140,14 +159,17 @@ const parseComponents = (node: HtmlNode) => {
 
   const componentHtml = getComponentHtml(tagName);
   const componentNode = textToNode(componentHtml);
-  const ctx = node.attributes;
+  const attrs = node.attributes;
 
   componentNode.childNodes.forEach((childNode) => {
-    if (isHtmlNode(childNode)) childNode.setAttributes(ctx);
+    if (isHtmlNode(childNode)) childNode.setAttributes(attrs);
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  parse(componentNode.childNodes, ctx);
+  const childrenNodes = node.childNodes
+  parse(node.childNodes, ctx);
+  const newCtx = { ...attrs, _slot: childrenNodes };
+
+  parse(componentNode.childNodes, newCtx);
 
   node.replaceWith(componentNode);
 };
@@ -155,10 +177,11 @@ const parseComponents = (node: HtmlNode) => {
 export const parse = (nodes: Node[], ctx: object) => {
   nodes.forEach((node) => {
     if (isHtmlNode(node)) {
+      if (parseSlots(node, ctx)) return;
       parseConds(node, ctx);
       if (parseLoops(node, ctx)) return;
       parseAttrs(node, ctx);
-      parseComponents(node);
+      parseComponents(node, ctx);
     }
     if (isTextNode(node)) parseText(node, ctx);
 

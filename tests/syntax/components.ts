@@ -54,4 +54,25 @@ describe("components", () => {
 
     assert.equal(result, expected);
   });
+
+  it("should pass component innerHTML as slot", () => {
+    const html = `<y-title>Hello world</y-title>`;
+    const dir = path.resolve(__dirname, "components");
+
+    const expected = `<h1>Hello world</h1>\n`;
+    const result = compile(html, { componentsDir: dir });
+
+    assert.equal(result, expected);
+  });
+
+  it("should pass parsed innerHTML as slot", () => {
+    const html = `<y-title>Hello {{ name }}</y-title>`;
+    const dir = path.resolve(__dirname, "components");
+    const ctx = { name: "jack" };
+
+    const expected = `<h1>Hello jack</h1>\n`;
+    const result = compile(html, { context: ctx, componentsDir: dir });
+
+    assert.equal(result, expected);
+  });
 });
