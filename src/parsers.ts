@@ -73,7 +73,7 @@ const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
     const clonedNode = cloneNode(node);
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    parse(clonedNode, { ...ctx, [elExpr]: arrEl, [idxExpr]: idx });
+    parse(clonedNode.childNodes, { ...ctx, [elExpr]: arrEl, [idxExpr]: idx });
 
     return clonedNode.toString();
   });
