@@ -41,4 +41,13 @@ describe("string interpolation", () => {
 
     assert.equal(result, expected);
   });
+
+  it("should parse expression with spaces", () => {
+    const html = "<div>{{ new Date(2020, 0, 1).toDateString() }}</div>";
+
+    const expected = "<div>Wed Jan 01 2020</div>";
+    const result = compile(html);
+
+    assert.equal(result, expected);
+  });
 });

@@ -60,7 +60,7 @@ const parseLoops = (node: HtmlNode, ctx: Record<string, any>) => {
   if (expression === undefined) return false;
 
   const [iterationExpr, arrExpr] = expression.split("in");
-  const [elExpr, idxExpr] = iterationExpr.replace(/\s|\(|\)/g, "").split(",");
+  const [elExpr, idxExpr] = iterationExpr.replace(/[\s()]*/g, "").split(",");
 
   const arrVal = evaluate(arrExpr, ctx);
 
@@ -123,7 +123,7 @@ const parseText = (node: TextNode, ctx: Record<string, any>) => {
   if (textToParse === null) return;
 
   textToParse.forEach((text) => {
-    const expression = text.replace(/[{}\s]*/g, "");
+    const expression = text.replace(/[{}]*/g, "");
     const result = evaluate(expression, ctx);
 
     rawText = rawText.replace(text, `${result}`);
