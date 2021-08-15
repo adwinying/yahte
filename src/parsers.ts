@@ -153,18 +153,24 @@ const parseComponents = (node: HtmlNode, ctx: Record<string, any>) => {
 
   if (!isComponent) return;
 
+  // bind component attrs to top level child nodes
   const componentHtml = getComponentHtml(tagName);
   const componentNode = textToNode(componentHtml);
   const attrs = node.attributes;
 
   componentNode.childNodes.forEach((childNode) => {
-    if (isHtmlNode(childNode)) childNode.setAttributes(attrs);
+    if (isHtmlNode(childNode)) {
+      Object.entries(attrs).forEach(([key, val]) => {
+        childNode.setAttribute(key, val);
+      });
+    }
   });
 
-  const childrenNodes = node.childNodes;
+  // parse component slot
   parse(node.childNodes, ctx);
 
-  const newCtx: Record<string, any> = { ...attrs, _slot: childrenNodes };
+  // add parsed slot to ctx so we can replace with y-slot
+  const newCtx: Record<string, any> = { ...attrs, _slot: node.childNodes };
   Object.entries(newCtx).forEach(([key, val]) => {
     if (/^_.+$/.test(key)) return;
 
@@ -175,6 +181,7 @@ const parseComponents = (node: HtmlNode, ctx: Record<string, any>) => {
     }
   });
 
+  // parse component markup
   parse(componentNode.childNodes, newCtx);
 
   node.replaceWith(componentNode);
