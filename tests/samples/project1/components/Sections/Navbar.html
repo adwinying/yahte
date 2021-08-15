@@ -1,0 +1,9 @@
+<nav>
+  <ul>
+    <li y-for="nav in navs">
+      <y-link y-bind:href="nav + '.html'">
+        {{ nav[0].toUpperCase() + nav.slice(1) }}
+      </y-link>
+    </li>
+  </ul>
+</nav>

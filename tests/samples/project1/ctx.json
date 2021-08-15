@@ -1,0 +1,12 @@
+{
+  "navs": [
+    "home",
+    "about",
+    "contact"
+  ],
+  "socials": [
+    { "name": "Facebook", "href": "www.facebook.com" },
+    { "name": "Twitter", "href": "www.twitter.com" },
+    { "name": "Email", "href": "mailto:hello@me.com" }
+  ]
+}

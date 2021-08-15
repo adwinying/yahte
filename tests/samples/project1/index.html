@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 1</title>
+</head>
+<body>
+  <y-title>Welcome to my site</y-title>
+
+  <y-sections.navbar
+    y-bind:navs="navs"
+    class="navbar-wrapper">
+  </y-sections.navbar>
+
+  <!-- about -->
+  <y-sections.wrapper>
+    this is the about section.
+  </y-sections.wrapper>
+
+  <!-- contact -->
+  <y-sections.wrapper>
+    <h3>these are the ways to contact me:</h3>
+
+    <y-link
+      y-for="social in socials"
+      y-bind:href="social.href">
+      {{ social.name }}
+    </y-link>
+  </y-sections.wrapper>
+
+  <!-- footer -->
+  <div class="footer">
+    &copy; {{ new Date().getFullYear() }} My web site.
+  </div>
+</body>
+</html>
