@@ -108,9 +108,11 @@ const parseAttrs = (node: HtmlNode, ctx: Record<string, any>) => {
 
     const attrName = attr.split(":")[1];
     const result = evaluate(expression, ctx);
+    const attrVal =
+      typeof result === "string" ? result : JSON.stringify(result);
 
     node.removeAttribute(attr);
-    node.setAttribute(attrName, `${result}`);
+    node.setAttribute(attrName, attrVal);
   });
 };
 
@@ -161,7 +163,17 @@ const parseComponents = (node: HtmlNode, ctx: Record<string, any>) => {
 
   const childrenNodes = node.childNodes;
   parse(node.childNodes, ctx);
-  const newCtx = { ...attrs, _slot: childrenNodes };
+
+  const newCtx: Record<string, any> = { ...attrs, _slot: childrenNodes };
+  Object.entries(newCtx).forEach(([key, val]) => {
+    if (/^_.+$/.test(key)) return;
+
+    try {
+      newCtx[key] = JSON.parse(val);
+    } catch (e) {
+      newCtx[key] = val;
+    }
+  });
 
   parse(componentNode.childNodes, newCtx);
 

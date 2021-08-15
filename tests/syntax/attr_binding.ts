@@ -22,6 +22,16 @@ describe("attribute binding", () => {
     assert.equal(result, expected);
   });
 
+  it("should convert vars that are not string to JSON before bind", () => {
+    const html = '<div y-bind:foo="foo">foobar</div>';
+    const obj = { foo: [1, 2, 3] };
+
+    const expected = '<div foo="[1,2,3]">foobar</div>';
+    const result = compile(html, { context: obj });
+
+    assert.equal(result, expected);
+  });
+
   it("should bind expression to attr", () => {
     const html = `<div y-bind:foo="foo.join(',')">foobar</div>`;
     const obj = { foo: [1, 2, 3] };
