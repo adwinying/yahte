@@ -2,9 +2,9 @@ import { parse as parseHtml } from "node-html-parser";
 import { Node } from "./types/Node";
 
 export const textToNode = (str: string) => {
-  return parseHtml(str);
+  return parseHtml(str, { comment: true });
 };
 
 export const cloneNode = (node: Node) => {
-  return parseHtml(node.toString()).childNodes;
+  return textToNode(node.toString()).childNodes;
 };
